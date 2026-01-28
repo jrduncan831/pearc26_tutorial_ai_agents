@@ -205,3 +205,25 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+hpc_agent_integration/TACC_exAI
+vectorstores/
+# generate code outputs
+generated_code/
+generated_slurm/
+
+# session data (chat history, vectorstores)
+sessions/
+vectorstores/
+
+# debug files
+test_data/
+plots/
+
+# knowledge base files
+knowledge_base/
+knowledge_base_html/
+
+# benchmark stuff
+benchmarks/da_agent_repo/
+benchmarks/utils/rag1_traces/
