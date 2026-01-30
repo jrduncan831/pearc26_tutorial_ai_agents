@@ -227,3 +227,5 @@ knowledge_base_html/
 # benchmark stuff
 benchmarks/da_agent_repo/
 benchmarks/utils/rag1_traces/
+
+.DS_Store
