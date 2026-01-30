@@ -1,30 +1,23 @@
-# pearc26_tutorial_ai_agents
-tutorial content for pearc 2026 tutorial on ai agents 
+# PEARC 2026 Tutorial:  AI Agents for Scientific Computing 
 
-This tutorial consists of 3 parts:
+The contents of this repo showcase the planned content for a 3 hour tutorial at PEARC. This tutorial consists of 5 parts:
 
-1. Introduction to Building simple agents
-2. Building agents for Data Analysis
-3. Building agents for use in HPC environments
+1. Introduction to AI Agents
+2. LAB: Introduction to TACC compute resources
+3. LAB: Introduction to Building simple agents
+4. LAB: Building agents for Data Analysis
+5. LAB: Building agents for use in HPC environments
 
 >[!NOTE]
-> For Part (1) and Part (2): Dependencies are specified in the requirements.txt in this repo
-> For Part (3): We will use have an *additional* dependency on TACC_exAI (an experimental agent framework code developed at TACC which will be provided)
+> For Part (3) and Part (4): Dependencies are specified in the requirements.txt in this repo
+> For Part (5): We will have an *additional* dependency called TACC_exAI (an experimental agent framework code developed at TACC which will be provided at a later date due to on going research)
 
 
 ## Environment setup instructions
 
-### On TACC Resource (Vista)
+### On TACC Resources
 
-1. Load an appropriate python module (choose a python version >= 3.9 and < 3.13)
-```
-module load python3/3.11.8
-```
-
-OR
-
-1. Container setup instructions <here>
-
+Detailed instructions for accessing TACC's compute resources and setting up your environment for the Labs 3-5 is included in the slide deck for Part (2).
 
 ### On your local machine
 
