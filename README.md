@@ -17,8 +17,10 @@ This tutorial consists of 3 parts:
 ### On TACC Resource (Vista)
 
 1. Load an appropriate python module (choose a python version >= 3.9 and < 3.13)
-```module load python3/3.11.8
 ```
+module load python3/3.11.8
+```
+
 OR
 
 1. Container setup instructions <here>
@@ -34,7 +36,7 @@ on setting up a workable environment on your local machines.
 > (i.e Hardware, Operating System and other tool chains). Please try and adapt the generic instructions provided to your specific machine
 
 Other software dependencies:
->[!NOTE}
+>[!NOTE]
 >  Please note that these are prerequisites and we expect them to be setup before the tutorial.
 > Given the time constraints of the tutorial, we will be unable to pause instruciton to assist to provide additional support for installations issues individually
 1. Install Ollama
@@ -44,16 +46,20 @@ Other software dependencies:
  
 
 1. Create a python environment
-``` uv venv <environment name>
+```
+uv venv <environment name>
 ```
 For example:
-``` uv venv pearc26_tutorial
+```
+uv venv pearc26_tutorial
 ```
 2. Activate the virtual environment
-```source pearc26_tutorial/bin/activate
+```
+source pearc26_tutorial/bin/activate
 ```
 
 3. Install dependencies (specified in the requirements.txt file)
-``` uv pip install -r requirements.txt
+```
+uv pip install -r requirements.txt
 ```
 
