@@ -33,23 +33,26 @@ Other software dependencies:
 >  Please note that these are prerequisites and we expect them to be setup before the tutorial.
 > Given the time constraints of the tutorial, we will be unable to pause instruction to assist to provide additional support for installations issues individually
 
-1. Install `uv`
+1. Install `git` command line client
+    * [Official Install Instructions](https://git-scm.com/install/source)
+
+2. Install `uv`
     * [Official Install Instructions](https://docs.astral.sh/uv/getting-started/installation/)
 
-2. Install Python 3.12
+3. Install Python 3.12
     * `uv venv --python 3.12 pearc26_tutorial`
 
-3. Activate python environment
+4. Activate python environment
     * `source pearc26_tutorial/bin/activate`
 
-4. Install package dependencies (requirements.txt)
+5. Install package dependencies (requirements.txt)
     * `uv pip install -r requirements.txt`
 
-5. Install Docker Desktop
+6. Install Docker Desktop
     * [Official Download](https://www.docker.com/products/docker-desktop/)
     * [Official Docker CLI documentation](https://docs.docker.com/reference/cli/docker/)
 
-6. Install Ollama
+7. Install Ollama
     * [Official Download](https://ollama.com/download)
     * [Official Install Instructions](https://docs.ollama.com)
     * Download 2 models locally (qwen3:8b and qwen3:32b: *This will require about 26GB of free space*)
