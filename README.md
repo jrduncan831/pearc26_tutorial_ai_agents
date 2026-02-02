@@ -51,6 +51,8 @@ Other software dependencies:
 6. Install Docker Desktop
     * [Official Download](https://www.docker.com/products/docker-desktop/)
     * [Official Docker CLI documentation](https://docs.docker.com/reference/cli/docker/)
+    * Download a container for sandboxed execution of agent code outputs
+        * `docker pull python:3.10-slim`
 
 7. Install Ollama
     * [Official Download](https://ollama.com/download)
