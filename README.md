@@ -4,8 +4,8 @@ The contents of this repo showcase the planned content for a 3 hour tutorial at 
 
 1. Introduction to AI Agents
 2. LAB: Introduction to TACC compute resources
-3. LAB: Introduction to Building simple agents
-4. LAB: Building agents for Data Analysis
+3. LAB: Introduction to building simple agents
+4. LAB: Building agents for data analysis
 5. LAB: Building agents for use in HPC environments
 
 >[!NOTE]
