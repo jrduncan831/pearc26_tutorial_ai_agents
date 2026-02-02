@@ -17,7 +17,7 @@ The contents of this repo showcase the planned content for a 3 hour tutorial at 
 
 ### On TACC Resources
 
-Detailed instructions for accessing TACC's compute resources and setting up your environment for the Labs 3-5 is included in the slide deck for Part (2).
+Detailed instructions for accessing TACC's compute resources and setting up your environment for the Labs 3-5 is included in the slide deck for Part (2).  These instructions will be updated closer to the actual event.  
 
 ### On your local machine
 
