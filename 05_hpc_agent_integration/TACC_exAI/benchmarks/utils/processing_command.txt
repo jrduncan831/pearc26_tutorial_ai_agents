@@ -1,0 +1,1 @@
+python -m benchmarks.utils.kfold_vector_embeddings_with_traces --n_splits 2 --path_to_experiments '<path to experiment_runs.json>' --traces_path ',<path to traces.json>'

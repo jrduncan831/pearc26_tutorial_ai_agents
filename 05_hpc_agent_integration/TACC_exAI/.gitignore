@@ -1,0 +1,83 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pkl
+
+# C extensions
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env/
+.venv/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-*
+
+# Environment variables and local settings
+.env
+.envrc
+*.env
+
+# Database files
+*.sqlite3
+*.db
+dump.rdb
+
+# Logs
+*.log
+logs/
+
+# Django specific (optional, if using Django)
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# generate code outputs
+generated_code/
+generated_slurm/
+
+# session data (chat history, vectorstores)
+sessions/
+vectorstores/
+
+# debug files
+test_data/
+plots/
+
+# knowledge base files
+knowledge_base/
+knowledge_base_html/
+
+# benchmark stuff
+benchmarks/da_agent_repo/
+benchmarks/utils/rag1_traces/
+
+# DS_store
+.DS_Store

@@ -1,0 +1,25 @@
+# templates/create_plan_template.txt
+The user has requested:
+{{ user_request }}
+
+Your task is to create a plan to solve the user's request using the available actions.
+
+{% if replan_context is defined and replan_context %}
+**Context About Failed Previous Plan**
+{{ replan_context }}
+{% endif %}
+
+**Available Actions:**
+{{ available_actions }}
+
+**Response Structure:**
+{{ response_structure }}
+
+Create a comprehensive plan that includes:
+1. User request
+2. Your thoughts on how to solve the request
+3. Overall plan goal
+4. Plan description
+5. List of plan steps with step index, step name, step description, action name, and custom user input for each step
+
+Ensure that the action name in each plan step is one of the available actions and that the custom user input is detailed enough for the action to be executed successfully.  You must respond with a valid DynamicPlanForLLM object only.

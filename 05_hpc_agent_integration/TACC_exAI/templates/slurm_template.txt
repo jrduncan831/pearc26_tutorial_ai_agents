@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+#SBATCH --job-name={{ slurm.job_name }}
+#SBATCH --partition={{ slurm.partition }}
+#SBATCH --time={{ slurm.time }}
+#SBATCH --nodes={{ slurm.num_nodes }}
+#SBATCH --ntasks-per-node={{ slurm.ntasks_per_node }}
+#SBATCH --output={{ slurm.job_name }}.%j.out
+
+{{ slurm.slurm_script_body }}
