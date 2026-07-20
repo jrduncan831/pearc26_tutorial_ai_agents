@@ -94,5 +94,16 @@ Other software dependencies:
     * Download 2 models locally (qwen3:8b and gemma3:27b: *This will require about 22GB of free space*)
         * `ollama pull qwen3:8b`
         * `ollama pull gemma3:27b`
- 
+
+ 8. Download the text embedding model all-MiniLM-L6-v2 to use with the SentenceTransformer module
+```bash
+python - << "PY"
+from sentence_transformers import SentenceTransformer
+
+# This will download/cache the model into the HF_HOME/hub directory
+model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+_ = model.encode(["test load"])
+print("Downloaded and cached all-MiniLM-L6-v2.")
+PY
+```
 
