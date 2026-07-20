@@ -9,20 +9,54 @@ The contents of this repo showcase the planned content for a 3 hour tutorial at 
 5. LAB: Building agents for use in HPC environments
 
 >[!NOTE]
-> For Part (3) and Part (4): Dependencies are specified in the requirements.txt in this repo
-> For Part (5): We will have an *additional* dependency called TACC_exAI (an experimental agent framework code developed at TACC which will be provided at a later date due to on going research)
+> A containerized kernel with all required models and dependencies will be provided on TACC systems at the beginning of the course. In the event of an internet outage, please follow one of the local installation instructions below before the course.
 
 
 ## Environment setup instructions
 
 ### On TACC Resources
 
-Detailed instructions for accessing TACC's compute resources and setting up your environment for the Labs 3-5 is included in the slide deck for Part (2).  These instructions will be updated closer to the actual event.  
+Detailed instructions for accessing TACC's compute resources and setting up your environment for the Labs 3-5 is included in the slide deck for Part (2) and we will go over together during the tutorial.
 
-### On your local machine
+### Local Installation Instructions (Docker-Based)
 
-While this training will be conducted on TACC infrastructure, in the event of network issues at the venue, we are providing some general instructions
-on setting up a workable environment on your local machines.
+If internet access is unavailable during the tutorial, you can use this Docker-based setup as the recommended local installation method for offline execution of the labs.
+
+1. Install `git` command line client
+    * [Official Install Instructions](https://git-scm.com/install/source)
+
+2. Clone the repository:
+   `git clone https://github.com/jrduncan831/pearc26_tutorial_ai_agents.git`
+
+3. Navigate into the project directory:
+   `cd pearc26_tutorial_ai_agents`
+
+4. Run the installation script:
+   `bash install.sh`
+
+   This script will:
+   - Pull a preconfigured Docker container that already includes:
+     - Ollama installed and configured for local LLM management
+     - Apptainer installed for sandboxed code execution
+     - All required Python dependencies for the tutorial
+   - Download required models and assets:
+     - LLMs: gemma3:27b and qwen3:8b
+     - Embedding model: all-MiniLM-L6-v2
+     - Apptainer container image: python_3.10-slim.sif
+
+   Note: This process requires approximately 33GB of free disk space.
+
+5. Launch the environment:
+   `bash launch.sh`
+
+   This will:
+   - Start the containerized environment
+   - Launch Jupyter Lab inside the container
+   - Automatically open the interface in your default web browser
+
+
+### Local Installation Instructions (virtual environment)
+If the above docker installation method does not work for you, below is information for building the environment from scratch.
 
 >[!CAUTION]
 > We are unable to provide specific instructions/support for individual machines given that this would be highly dependent on your specific platform
@@ -57,8 +91,8 @@ Other software dependencies:
 7. Install Ollama
     * [Official Download](https://ollama.com/download)
     * [Official Install Instructions](https://docs.ollama.com)
-    * Download 2 models locally (qwen3:8b and qwen3:32b: *This will require about 26GB of free space*)
+    * Download 2 models locally (qwen3:8b and gemma3:27b: *This will require about 22GB of free space*)
         * `ollama pull qwen3:8b`
-        * `ollama pull qwen3:32b`
+        * `ollama pull gemma3:27b`
  
 

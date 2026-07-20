@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import threading
 import time
+import sys  # NEW: for sys.executable
 
 
 
@@ -78,9 +79,6 @@ def ensure_apptainer_image() -> Path:
     if image_path.exists():
         return image_path
 
-
-    # Pull the container to create the .sif file
-    # Assumes Apptainer is available in the environment (e.g., via Lmod module)
     result = subprocess.run(
         ["apptainer", "pull", str(image_path), APPTAINER_DOCKER_URI],
         stdout=subprocess.PIPE,
@@ -97,44 +95,44 @@ def ensure_apptainer_image() -> Path:
 
 
 def run_python_in_docker(code: str, data_dir: Path = None):
+    """
+    Updated: execute the provided Python code directly in the current container
+    by writing it to a temporary script and invoking the current interpreter.
+    """
     tmpdir = tempfile.mkdtemp()
     script_path = os.path.join(tmpdir, "script.py")
     
     with open(script_path, "w") as f:
         f.write(code)
 
-
+    # You could still use USE_APPTAINER here to select an alternate interpreter or env,
+    # but per request we no longer spawn a separate Docker/Apptainer container.
     use_apptainer = USE_APPTAINER
-
 
     base_dir = Path(__file__).parent
     base_home_dir = base_dir / "apptainer_base_home"
     home1 = base_dir / "apptainer_home_1"
     home2 = base_dir / "apptainer_home_2"
 
-
     #
-    # Async utilities - MODIFIED to use global lock
+    # Async utilities - unchanged
     #
     def async_task(func):
         t = threading.Thread(target=func, daemon=True)
         t.start()
 
-
     def async_delete(path: Path):
         def _delete():
             try:
                 shutil.rmtree(path)
-            except Exception as e:
+            except Exception:
                 pass
         async_task(_delete)
-
 
     def async_copy_base_to_home2():
         """Async copy with proper lock acquisition."""
         def _copy():
             try:
-                # Acquire lock (blocks until previous copy completes)
                 home2_copy_lock.acquire()
                 home2_copy_active.set()  # Signal copy is active
                 
@@ -142,15 +140,13 @@ def run_python_in_docker(code: str, data_dir: Path = None):
                     shutil.rmtree(home2)
                 
                 clone_home(base_home_dir, home2)
-                
-            except Exception as e:
+            except Exception:
                 pass
             finally:
-                home2_copy_active.clear()  # Clear active flag
-                home2_copy_lock.release()  # Always release lock
+                home2_copy_active.clear()
+                home2_copy_lock.release()
         
         async_task(_copy)
-
 
     def clone_home(source: Path, dest: Path):
         """Literal copy of directory contents using working tar pipe method."""
@@ -158,7 +154,6 @@ def run_python_in_docker(code: str, data_dir: Path = None):
             shutil.rmtree(dest)
         dest.mkdir(parents=True, exist_ok=True)
         
-        # Exact bash: rm -rf dest && mkdir -p dest && tar cf - -C source . | tar xf - -C dest
         tar_cmd = ["tar", "cf", "-", "-C", str(source), "."]
         extract_cmd = ["tar", "xf", "-", "-C", str(dest)]
         
@@ -170,86 +165,16 @@ def run_python_in_docker(code: str, data_dir: Path = None):
         proc2.wait()
         
         if proc1.returncode != 0 or proc2.returncode != 0:
-            raise RuntimeError(f"tar clone failed: proc1={proc1.returncode}, proc2={proc2.returncode}")
+            raise RuntimeError(
+                f"tar clone failed: proc1={proc1.returncode}, proc2={proc2.returncode}"
+            )
 
     #
-    # Main logic branch
+    # Main logic: run script with current Python interpreter
     #
-    if use_apptainer:
-        
-        # Ensure Apptainer image exists
-        try:
-            sif_path = ensure_apptainer_image()
-        except Exception as e:
-            return {
-                "success": False,
-                "output": f"Error ensuring Apptainer image: {e}",
-                "is_image": False,
-            }
-
-
-        # One-time setup of base Apptainer home
-        if not (base_home_dir.exists() and home1.exists() and home2.exists()):
-            os.makedirs(base_home_dir, exist_ok=True)
-            
-            setup_cmd = [
-                "apptainer", "exec",
-                "--cleanenv", "--containall", "--no-home",
-                "--pwd", "/tmp",
-                "--bind", f"{base_home_dir}:/home",
-                "--home", f"{base_home_dir}:/home",
-                str(sif_path),
-                "bash", "-c",
-                "python -m venv /home/venv && "
-                "source /home/venv/bin/activate && "
-                "pip install --cache-dir /home/.cache/pip -q uv"
-            ]
-            
-            result = subprocess.run(setup_cmd, capture_output=True, text=True)
-            
-            if result.returncode != 0:
-                return {
-                    "success": False,
-                    "output": f"Error setting up Apptainer base home: {result.stdout or result.stderr}",
-                    "is_image": False,
-                }
-
-
-            clone_home(base_home_dir, home1)
-            clone_home(base_home_dir, home2)
-
-
-        # Compose Apptainer exec command for code
-        apptainer_cmd = [
-            "apptainer", "exec",
-            "--cleanenv", "--containall", "--no-home",
-            "--pwd", "/tmp",
-            "--bind", f"{home1}:/home",
-            "--home", f"{base_home_dir}:/home",
-            "--bind", f"{tmpdir}:/tmp:ro",
-            str(sif_path),
-            "bash", "-c",
-            "source /home/venv/bin/activate && python -u /tmp/script.py",
-        ]
-        cmd = apptainer_cmd
-
-
-    else:
-        # Docker path (unchanged)
-        container_name = f"code-runner-{uuid.uuid4().hex[:8]}"
-        docker_cmd = [
-            "docker", "run", "--rm",
-            "-v", f"{script_path}:/tmp/script.py:ro",
-        ]
-        if data_dir is not None:
-            docker_cmd.extend(["-v", f"{data_dir}:/data:ro"])
-        docker_cmd.extend([
-            "--name", container_name,
-            "python:3.10-slim",
-            "python", "-u", "/tmp/script.py",
-        ])
-        cmd = docker_cmd
-
+    # If you want to support an alternate virtualenv, you can modify cmd accordingly,
+    # but we no longer use `docker run` or `apptainer exec`.
+    cmd = [sys.executable, "-u", script_path]  # direct execution in current container
 
     #
     # Run and collect results
@@ -263,45 +188,37 @@ def run_python_in_docker(code: str, data_dir: Path = None):
         is_image = is_base64_image(output) if success else False
         return {"success": success, "output": output, "is_image": is_image}
 
-
     except Exception as e:
-        import traceback
-        return {"success": False, "output": f"subprocess exception: {e}", "is_image": False}
-
+        return {
+            "success": False,
+            "output": f"subprocess exception: {e}",
+            "is_image": False,
+        }
 
     finally:
         try:
-            # Always clean temp script directory
             os.remove(script_path)
             os.rmdir(tmpdir)
 
-
             if use_apptainer:
-                
                 # CRITICAL: Wait for any home2 copy to complete before rotation
                 if not wait_for_home2_copy_complete():
                     pass
                 
                 # Rotate/cleanup environment homes
                 if home1.exists():
-                    # Move old home1 to temp dir for async deletion
                     tmp_delete_path = base_dir / f"delete_home_{uuid.uuid4().hex[:8]}"
                     home1.rename(tmp_delete_path)
                     async_delete(tmp_delete_path)
 
-
-                # Promote home2 → home1 (now safe - home2 copy is complete)
                 if home2.exists():
                     home2.rename(home1)
 
-
-                # Recreate new home2 asynchronously from base
                 async_copy_base_to_home2()
 
-
-        except Exception as e:
-            import traceback
+        except Exception:
             pass
+
 
 
 def process_docker_response(response, app=None):
@@ -309,7 +226,7 @@ def process_docker_response(response, app=None):
         if app:
             if role == "error":
                 app.log_error(msg if msg else syntax)
-            elif role == "assistant" or role == "system":
+            elif role in ("assistant", "system"):
                 if syntax:
                     app.log_syntax(syntax)
                 else:
@@ -322,16 +239,14 @@ def process_docker_response(response, app=None):
             else:
                 print(msg)
 
-
     if not response["success"]:
         syntax = Syntax(response["output"], "python", theme="monokai", line_numbers=False)
         log(role="error", syntax=syntax)
         return
 
-
     if response.get("is_image"):
         try:
-            image_bytes = base64.b64decode(response['output'])
+            image_bytes = base64.b64decode(response["output"])
             image_path = "image.png"
             with open(image_path, "wb") as f:
                 f.write(image_bytes)
@@ -342,33 +257,31 @@ def process_docker_response(response, app=None):
         log(f"Execution Output:\n{response['output']}")
 
 
-
 if __name__ == "__main__":
-    # Example: toggle backend here if desired
-    # set_use_apptainer(True)
-
-
-    response = run_python_in_docker("print('Hello from Docker!')")
+    # Example: now runs inside current container
+    response = run_python_in_docker("print('Hello from current container!')")
     process_docker_response(response)
-
 
     response = run_python_in_docker("raise ValueError('Oops!')")
     process_docker_response(response)
 
-
-    response = run_python_in_docker("""
+    response = run_python_in_docker(
+        """
 import subprocess
 import sys
 def install_uv():
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "uv"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "uv"],
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError as e:
         print(f"Failed to install uv: {e}")
         sys.exit(1)
 def install_packages_with_uv():
     required_packages = ['matplotlib', 'numpy']
     try:
-        subprocess.check_call([sys.executable, "-m", "uv", "pip", "install"] + required_packages, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_call([sys.executable, "-m", "uv", "pip", "install"]
+                              + required_packages,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError as e:
         print(f"Failed to install packages with uv: {e}")
         sys.exit(1)
@@ -393,5 +306,6 @@ def main():
     return img_base64
 if __name__ == "__main__":
     print(main())
-""")
+"""
+    )
     process_docker_response(response)

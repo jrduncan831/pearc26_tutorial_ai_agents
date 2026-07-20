@@ -212,6 +212,8 @@ vectorstores/
 generated_code/
 generated_slurm/
 
+05_hpc_agent_integration/python_3.10-slim.sif
+
 # session data (chat history, vectorstores)
 sessions/
 vectorstores/
