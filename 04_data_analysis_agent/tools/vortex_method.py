@@ -50,7 +50,7 @@ def write_output(y, nwrite, write_dir):
         plt.xlim(xmin-1,xmax+1)
         plt.ylim(ymin-1,ymax+1)
         plt.grid()
-        plt.savefig(os.path.join(write_dir,'snapshot_' + str(ind) + '.png'), dpi = 300)
+        plt.savefig(os.path.join(write_dir,'snapshot_' + str(ind) + '.png'))
         plt.close()
 
 
