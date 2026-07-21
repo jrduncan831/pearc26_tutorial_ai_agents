@@ -16,7 +16,12 @@ The contents of this repo showcase the planned content for a 3 hour tutorial at 
 
 ### On TACC Resources
 
+This class requires an active and verified TACC account:
+1. **If you do not have a TACC account, you must register for one [here](https://accounts.tacc.utexas.edu/register)**. This process involves verifying your email, agreeing to the TACC Acceptable Use Policy, and setting up multifactor authorization on your mobile device.
+2. **All participants must submit their TACC username to this [Google form](https://docs.google.com/forms/d/e/1FAIpQLSfLOiGRIF4x0L2AXSZuDyqt1jN4Re0QsiKpz1oo_KQYQwoy_w/viewform)**. This form allows us to add you to the project allocation prior to the start of the tutorial.
+
 Detailed instructions for accessing TACC's compute resources and setting up your environment for the Labs 3-5 is included in the slide deck for Part (2) and we will go over it together during the tutorial.
+
 
 ### Local Installation Instructions (Docker-Based)
 
