@@ -27,16 +27,20 @@ Detailed instructions for accessing TACC's compute resources and setting up your
 
 If internet access is unavailable during the tutorial, you can use this Docker-based setup as the recommended local installation method for offline execution of the labs.
 
-1. Install `git` command line client
+1. Install Docker Desktop
+    * [Official Download](https://www.docker.com/products/docker-desktop/)
+    * [Official Docker CLI documentation](https://docs.docker.com/reference/cli/docker/)
+      
+2. Install `git` command line client
     * [Official Install Instructions](https://git-scm.com/install/source)
 
-2. Clone the repository:
+3. Clone the repository:
    `git clone https://github.com/jrduncan831/pearc26_tutorial_ai_agents.git`
 
-3. Navigate into the project directory:
+4. Navigate into the project directory:
    `cd pearc26_tutorial_ai_agents`
 
-4. Run the installation script:
+5. Run the installation script:
    `bash install.sh`
 
    This script will:
@@ -51,7 +55,7 @@ If internet access is unavailable during the tutorial, you can use this Docker-b
 
    Note: This process requires approximately 33GB of free disk space.
 
-5. Launch the environment:
+6. Launch the environment:
    `bash launch.sh`
 
    This will:
