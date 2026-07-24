@@ -151,7 +151,7 @@ docker run --rm \
     echo "Apptainer image already exists at: $APPTAINER_IMAGE_PATH; skipping build."
     else
     echo "Building Apptainer image $APPTAINER_IMAGE_NAME from $APPTAINER_DOCKER_URI..."
-    apptainer build "$APPTAINER_IMAGE_PATH" "$APPTAINER_DOCKER_URI"
+    apptainer build "$APPTAINER_IMAGE_PATH" "$APPTAINER_DOCKER_URI" --force
     echo "Apptainer image built at: $APPTAINER_IMAGE_PATH"
     fi
 
