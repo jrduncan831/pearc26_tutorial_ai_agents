@@ -145,12 +145,15 @@ docker run --rm \
     # Build Apptainer image from Docker URI
     ########################################
 
-    # Ensure apptainer is installed inside this container image.
-    # Using apptainer build to convert docker://python:3.10-slim into a SIF file.
-    # Typical pattern: apptainer build <output.sif> docker://<image> [web:4][web:8][web:9]
+    APPTAINER_IMAGE_PATH="$HPC_AGENT_DIR/$APPTAINER_IMAGE_NAME"
+
+    if [[ -f "$APPTAINER_IMAGE_PATH" ]]; then
+    echo "Apptainer image already exists at: $APPTAINER_IMAGE_PATH; skipping build."
+    else
     echo "Building Apptainer image $APPTAINER_IMAGE_NAME from $APPTAINER_DOCKER_URI..."
-    apptainer build "$HPC_AGENT_DIR/$APPTAINER_IMAGE_NAME" "$APPTAINER_DOCKER_URI"
-    echo "Apptainer image built at: $HPC_AGENT_DIR/$APPTAINER_IMAGE_NAME"
+    apptainer build "$APPTAINER_IMAGE_PATH" "$APPTAINER_DOCKER_URI"
+    echo "Apptainer image built at: $APPTAINER_IMAGE_PATH"
+    fi
 
     ########################################
     # Download Ollama models
